@@ -10,9 +10,11 @@ MANDIR = $(PREFIX)/share/man
 
 VERSION = $(shell grep VERSION main.h | sed -e 's/^[^"]*"//' -e 's/".*//')
 
-default:	$(BIN)
+default:	$(BIN) ec
 
 it8712:	$(OBJS)
+
+ec:	ec.o it8712.o
 
 .PHONY:	clean
 
