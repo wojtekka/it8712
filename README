@@ -1,1 +1,8 @@
+IT8712 is a Super I/O chip handling serial ports, parallel port, FDC,
+keyboard, mouse, thermometers, voltage measurement, etc. It's installed
+on GigaByte motherboards (probably others too). This chip is configurable
+from BIOS setup, which requires reboot with every change. The following
+Linux utility allows to modify all registers at runtime, for example
+changing serial port mode from IrDA to standard and vice versa. 
+
 See it8712(8) manpage for details.
