@@ -1,0 +1,106 @@
+.\"
+.\"  IT8712 tweaking tool v1.0
+.\"  (C) Copyright 2004 by Wojtek Kaniewski <wojtekka@toxygen.net>
+.\"
+.TH IT8712 8 "Apr 10, 2004"
+.SH NAME
+it8712 \- IT8712 Super I/O tweaking tool
+.SH SYNOPSIS
+\fBit8712\fR [\fIOPTIONS\fR]...
+.SH DESCRIPTION
+.B it8712
+is used to modify IT8712 configuration at runtime.  It has been written to
+allow changing 2nd serial port mode from standard to IrDA without the need
+to reboot and enter BIOS setup, but it can be used to change any register
+of any logical device.  Changes are lost after reboot.
+
+IT8712 can be found on many GigaByte motherboards and has been tested on
+GA-8IEX with Intel i845 chipset.
+.SH OPTIONS
+.TP
+\fB\-l\fR, \fB\-\-ldn\fR=\fIVALUE\fR
+select LDN (Logical Device Number); use \fBlist\fR for list of available
+devices
+.TP
+\fB\-a\fR, \fB\-\-address\fR=\fIVALUE\fR
+select register address (0-255)
+.TP
+\fB\-B\fR, \fB\-\-byte\fR
+byte operations (default)
+.TP
+\fB\-W\fR, \fB\-\-word\fR
+word operations
+.TP
+\fB\-r\fR, \fB\-\-read\fR
+print selected register value
+.TP
+\fB\-w\fR, \fB\-\-write\fR=\fIVALUE\fR
+set register value
+.TP
+\fB\-n\fR, \fB\-\-and\fR=\fIVALUE\fR
+bitwise AND
+.TP
+\fB\-o\fR, \fB\-\-or\fR=\fIVALUE\fR
+bitwise OR
+.TP
+\fB\-s\fR, \fB\-\-bit\-set\fR=\fIINDEX\fR
+set bit in register
+.TP
+\fB\-c\fR, \fB\-\-bit\-clear\fR=\fIINDEX\fR
+clear bit in register
+.TP
+\fB\-d\fR, \fB\-\-dump\fR
+print all registers of all devices to stdout
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+display help
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+print version
+.PP
+There are also some aliases:
+.TP
+\fB\-\-irda\-stop\fR
+-l 0x02 -a 0xf0 -n 0x8f
+.TP
+\fB\-\-irda\-start\fR
+-l 0x02 -a 0xf0 -n 0x8f -o 0x10
+.SH REGISTERS
+All devices have register 0x30 which enables the device if its bit 0 is set.
+For example, to disable 1st serial port use:
+.IP
+\fBit8712 -l 0x01 -a 0x30 -c 0\fR
+.LP
+and to enable it use:
+.IP
+\fBit8712 -l 0x01 -a 0x30 -s 0\fR
+.LP
+Most of devices have base address setting in register 0x60 that can be
+access as words. To enable MIDI port and change its base address to 0x300 use:
+.IP
+\fBit8712 -l 0x08 -a 0x30 -s 0 -a 0x60 -W -w 0x300\fR
+.LP
+Full specification can be found at ITE's webpage:
+.IP
+\fBhttp://www.ite.com.tw/pc/IT8712F_V08.pdf\fR
+.LP
+but if the link becomes invalid, try googling for
+.IP
+\fIIT8712F specification PDF\fR
+.LP
+.SH WARNING
+Improper use may \fBDAMAGE YOUR COMPUTER\fR.  This program is distributed
+in the hope that it will be useful, but \fBWITHOUT ANY WARRANTY\fR; without
+even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.  See the GNU General Public License for more details.
+.SH "KNOWN BUGS"
+Reading GPIO configuration registers (0x25-0x2A) of LDNs other than 0x07
+gives random results, though the manual says they can be read from any LDN.
+.SH WEBSITE
+http://toxygen.net/it8712/
+.SH AUTHORS
+Wojtek Kaniewski <wojtekka@toxygen.net>
+
+The \fBit8712\fR home page is \fIhttp://toxygen.net/it8712/\fR.
+.SH "SEE ALSO"
+.BR sysctl (8)
